@@ -10,12 +10,13 @@ their precious notes after the app is restarted.  That's a 1 Star review waiting
 
 ##Persistence
 
-In this context, persistence is the ability to save data so that when you close an app and reopen it, the data is still there.
+Persistence is the ability of an object to survive past the lifetime of the OS process in which it resides.
 
 **How to achieve persistence**
 
+- Should be transparent to application developer
 - Upon activation, load object state from persistent storage
-- Before deactivation, store object state to persistent storage
+- Storing object state on persistent storage before de-activation
 
 Hold up... This sounds like it could be painful...  
 
@@ -40,7 +41,7 @@ OK, I'm convinced. Let's take it for a spin. Time to implement Realm into our `N
     class Note : RLMObject { 
     }
 
-So we've dynamically imported the Realm library so we have access to this functionality.  You remember Alt-Clicking? Try it now on *RLMObject*.
+So we've dynamically imported the Realm library so we have access to this functionality.  You remeber Alt-Clicking? Try it now on *RLMObject*.
 Realm objects are just like normal objects - you just subclass *RLMObject* to get started.
 
 > [action]
@@ -99,7 +100,13 @@ that can be squeezed out of an app. This comes with experience.
 ##didSet
 
 So you've added a variable to store the `Note` object. What is didSet? It's a rather handy bit of functionality that will be called whenever this `note` object is modified. 
-For example, if the note gets edited anywhere, this function will be called that will update the Outlet labels and therefore update the `NoteCell` in our list.
+For example, if the note gets edited anywhere, this function will be called that will update the OutLet labels and therefore update the `NoteCell` in our list.
+
+##if - let
+
+Remember back to optionals and how sometimes a variable can be empty - represented by `nil`? If we forget about this and go about coding normally, our application is likely to crash and burn, not exactly a great experience for your users. If - let allows us to ensure that the variable does hold a value, and continue to code as usual.
+`if let thing1 = thing2` says: assign the value (or nil) in thing2 to thing1, and afterwards if thing1 holds a non-nil value, execute the code within the following curly braces. This means that you can use `thing1` within the block of code contained in the curly braces safely, without worrying about unexpected behavior due to a `nil` value.
+In our example, we make sure that `note`, `titleLabel`, and `dateLabel` are properly set before we execute our code involving them.
 
 ##Notes Collection
 
@@ -160,8 +167,7 @@ Remember when you added the `UITableViewDataSource` protocol extension? These fu
 > Replace the following code in `tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)`
 >
     let row = indexPath.row
-    cell.titleLabel.text = "Hello"
-    cell.dateLabel.text = "Today"
+    cell.textLabel?.text = "Hello World"
 >
 > with
 > 
